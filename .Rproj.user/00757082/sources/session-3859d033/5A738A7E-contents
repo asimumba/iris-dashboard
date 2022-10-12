@@ -2,7 +2,7 @@
 title: "Not Another Iris: A Data Exploration Story"
 output: 
   flexdashboard::flex_dashboard:
-    logo: logo-sy.png
+    #logo:
     theme:
       version: 4
       bootswatch: flatly
