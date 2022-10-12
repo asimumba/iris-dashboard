@@ -2,7 +2,7 @@
 title: "Not Another Iris: A Data Exploration Story"
 output: 
   flexdashboard::flex_dashboard:
-    #logo:
+    #logo: 
     theme:
       version: 4
       bootswatch: flatly
@@ -22,6 +22,15 @@ output:
     orientation: columns
     vertical_layout: fill
     source_code: embed
+knit: (function(input, ...) {
+    rmarkdown::render(
+      input,
+      output_file = paste0(
+        'index.html'
+      ),
+      envir = globalenv()
+    )
+  })
 ---
 
 ```{=html}
