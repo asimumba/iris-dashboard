@@ -21,7 +21,8 @@ output:
         google: JetBrains Mono
     orientation: columns
     vertical_layout: fill
-    source_code: embed
+    source_code: https://github.com/asimumba/iris-dashboard
+    social: [ "twitter","linkedin"]
 knit: (function(input, ...) {
     rmarkdown::render(
       input,
