@@ -1,0 +1,251 @@
+---
+title: "Not Another Iris: A Data Exploration Story"
+output: 
+  flexdashboard::flex_dashboard:
+    logo: logo-sy.png
+    theme:
+      version: 4
+      bootswatch: flatly
+      bg: "#2A343F"
+      fg: "#FDF7F7"
+      primary: "#00A664"
+      secondary: "#00A664"
+      accent: "#FF6F2A"
+      success: "#00A664"
+      navbar-bg: "#00A664"
+      heading_font:
+        google: Sen
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{=html}
+<style>
+.navbar, [data-toggle=tab], .navbar-brand, .dropdown-toggle {
+  color:white!important;
+}
+
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+    color: orange!important;
+}
+.navbar-inverse .navbar-nav > .active > a,
+.navbar-inverse .navbar-nav > .active > a:hover,
+.navbar-inverse .navbar-nav > .active > a:focus {
+  color: orange!important;
+}
+</style>
+```
+
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(DT)
+
+
+options(
+  dplyr.summarise.inform = FALSE,
+  tidyverse.quiet = TRUE
+)
+
+thematic::thematic_rmd()
+
+iris_data <- read_csv("data/Iris.csv") %>% 
+  janitor::clean_names()
+
+theme_set(theme_minimal())
+
+theme_update(
+  axis.ticks = element_line(color = "grey92"),
+  axis.ticks.length = unit(.5, "lines"),
+  panel.grid.minor = element_blank(),
+  legend.title = element_text(size = 9),
+  legend.text = element_text(color = "grey30"),
+  plot.title = element_text(size = 18, face = "bold"),
+  plot.subtitle = element_text(size = 12, color = "grey30"),
+  plot.caption = element_text(size = 9, margin = margin(t = 15))
+)
+```
+
+# Sidebar {.sidebar data-width="320"}
+
+The goal of this analysis is to explore the Iris data set through **data visualization**. The data set comes from the classic Iris data set used by British Biologist Ronald Fisher to analyse multivariate features in a data set.
+
+The data set is made up of three species of the Iris flowers, namely, **Setosa**, **Versicolor**, and **Virginica**.
+
+There are a total of **150 observations** of the species in the data set with each having 50 candidates. The data set is made up of a total of **4 variables** of interest. These are: **Sepal Length**, **Sepal Width**, **Petal Length**, **Petal Width** and **Species**. The dimensions for the lengths and widths are in centimeters unit of measurement.
+
+The project has been laid out into three major pages, overview, Data, and About. The overview contains five tabs that visualizes the different variables of interest from the data, as well as give a brief overview of the derived insights and observations.
+
+The data page, showcases the data on which the analysis is based. With the about page detailing the technical considerations taken and finally acknowledgement.
+
+
+# Overview {data-width=650 .tabset}
+
+## {data-width="500" .tabset}
+
+### Sepal Measures
+
+```{r}
+iris_data %>%
+  ggplot(aes(x = sepal_length_cm, y = sepal_width_cm, color = species)) +
+  geom_point() +
+  labs(
+    title = 'Sepal Dimensions for the Iris Species',
+    subtitle = 'A scatter plot of Sepal Width versus Sepal length.',
+    x = 'Sepal Length (cm)',
+    y = 'Sepal Width (cm)',
+    color = 'Species'
+  ) +
+  theme(legend.position = "bottom")
+```
+
+### Petal Measures
+```{r}
+iris_data %>%
+  ggplot(aes(x = petal_length_cm, y = petal_width_cm, color = species)) +
+  geom_point() +
+  labs(
+    title = 'Petal Dimensions for the Iris Species',
+    subtitle = 'A scatter plot of Petal Width versus Petal length.',
+    x = 'Petal Length (cm)',
+    y = 'Petal Width (cm)',
+    color = 'Species'
+  ) + 
+  theme(legend.position = "bottom")
+```
+
+### Measure Distribution
+
+```{r}
+iris_data %>%
+  select(-id) %>%
+  pivot_longer(
+    cols = sepal_length_cm:petal_width_cm,
+    names_to = "variable",
+    values_to = "measure"
+  ) %>%
+  mutate(
+    variable = case_when(
+      variable == "sepal_length_cm" ~ "Sepal Length",
+      variable == "sepal_width_cm" ~ "Sepal Width",
+      variable == "petal_width_cm" ~ "Petal Width",
+     variable == "petal_length_cm" ~ "Petal Length"
+    )
+  ) %>%
+  ggplot(aes(x = species, y = measure, fill = species)) +
+  geom_boxplot() +
+  facet_wrap(~ variable, scales = "free_x") +
+  labs(
+    title = 'Distritution of the Species Dimensions',
+    subtitle = 'A boxplot plot of Petal versus Sepal Dimensions ',
+    x = NULL,
+    y = 'Measure (cm)',
+    fill = 'Species'
+  ) +
+  coord_flip() +
+  theme(legend.position = "bottom")
+```
+
+### Insights
+ **Sepal Length vs Sepal Width**
+ 
+- Iris Setosa species have smaller sepal length but larger width.
+
+- Versicolor species have mainly average measures for both sepal length and sepal width.
+
+- Virginica species have larger sepal length but smaller sepal width.
+
+- There is no clear relationship between Sepal length and Sepal width. However, Setosa exhibits a more positive relationship, implying that sepal length and width move in the same direction, lower values of length are accompanies by lower values of width and vice versa.
+
+
+ **Petal Length vs Petal Width**
+ 
+- Setosa species have the smallest petal length as well as petal width.
+
+- Versicolor species have average petal length and petal width.
+
+- Virginica species have the largest petal length as well as petal width.
+
+- There is a positive relationship between Petal length and Petal width for all the three species of the Iris flowers. This implies that smaller petal lengths have equally smaller petal widths, and vice versa.
+ 
+
+**Measure Distribution**
+
+As highlighted  above, the distribution of the measures for the species can be confirmed using the box plots under the measure distribution tab. In terms of Petal length, Setosa, have smaller median values compared to Versicolor and Virginica, but virginica indicates that most of the values are on the higher side as indicated through the right hand side extended line.
+
+Setosa species have outlier values for petal length and width. Equally Virginica have outlier values for sepal length and width.
+
+
+## {data-width="360" .tabset}
+
+### Species Count
+```{r}
+iris_data %>% 
+  group_by(species) %>% 
+  tally() %>% 
+  ggplot(aes(x = species, y = n, fill = species)) +
+  geom_col() +
+    labs(
+    title = 'Distribution of the Iris Species',
+    subtitle = 'Total number of species in each group',
+    x = NULL,
+    y = 'Number of Species',
+    fill = 'Species'
+  ) +
+  theme(legend.position = "bottom")
+```
+
+
+# Data
+
+```{r}
+iris_data %>% 
+      datatable(
+      colnames = c(
+        'ID',
+        'Sepal Length',
+        'Sepal Width',
+        'Petal Length',
+        'Petal Width',
+        'Species'
+      ),
+      rownames = FALSE,
+      extensions = 'Buttons',
+      options = list(
+        dom = 'Blfrtip',
+        buttons = list(
+          list(
+            extend = 'collection',
+            buttons = c('csv', 'excel', 'pdf'),
+            text = 'Download'
+          )
+        ),
+        paging = FALSE,
+        searchHighlight = TRUE
+      )
+    )
+
+```
+
+# About
+
+**Technical Considerations**
+
+- This assignment was accomplished using the _R Programming Language_ with heavy usage of the _tidyverse_ suite of packages.
+
+- Thanks to Flexdashboard, the magic wand that stitched the visualizations into a coherent dashboard.
+
+- All the visualization were created using the ggplot2 package, may the _geoms_ live on!
+
+**Gratitude**
+
+- My gratitude to all the open-source developers out there, you are definitely treasured for you countless hours dedicated to developing the software that make work for a practitioner like me get all the credit.
+
+_"I'm great because I stand on the shoulders of giants"_

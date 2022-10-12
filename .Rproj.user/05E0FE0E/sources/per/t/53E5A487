@@ -1,0 +1,29 @@
+{
+    "id": "53E5A487",
+    "path": "~/R/syngenta/iris-dashboard.Rmd",
+    "project_path": "iris-dashboard.Rmd",
+    "type": "r_markdown",
+    "hash": "2259100513",
+    "contents": "",
+    "dirty": false,
+    "created": 1629710189632.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "tempName": "Untitled1",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "180,44",
+        "scrollLine": "108",
+        "last_setup_crc32": "",
+        "docOutlineVisible": "1"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1629875949,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1629875949922,
+    "read_only": false,
+    "read_only_alternatives": []
+}
